@@ -61,6 +61,42 @@ public class TestImpl1 implements ITestInterface1 {
   1. 无需关心注入过程，使用简单
   2. 无APT，缩短编译耗时
   
+  # 在项目中引入
+  1. 在Project的build.gradle文件中添加
+  ```
+  //maven依赖
+allprojects {
+    repositories {
+        maven {
+            url 'https://dl.bintray.com/liguangquan/maven'
+        }
+    }
+}
+
+dependencies {
+      classpath 'me.amator.sdk:serviceGlue-plugin:${last_version}'
+    }
+```
+2. 在Application的build.gradle、library的buildgradle添加
+```
+apply plugin: 'service-glue'
+
+ServiceGlue {
+    enable true
+    enableInDebug true
+}
+
+dependencise{
+  implementation 'me.amator.sdk:serviceGlue-plugin:${last_version}'
+}
+
+
+```
+
+# 版本更新
+### last_version=0.0.1  tag: 服务发现框架
+      
+  
   # TODO
   1. 增量编译
   2. 支持带参数构造函数
