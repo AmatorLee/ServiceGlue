@@ -1,0 +1,29 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+uploadArchives {
+    repositories.mavenDeployer {
+        if (DEV_MODE == "true") {
+
+            repository(url: "file://" + rootProject.buildDir.parent + '/localMaven')
+            pom.version = "0.0.1-local"
+            pom.groupId = PROJ_GROUP
+            pom.artifactId = PROJ_ARTIFACTID_SERVICE_PLUGIN
+        }
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.tools.build:gradle:3.1.4'
+    compileOnly gradleApi()
+    implementation 'com.bytedance.android.byteX:common:0.1.0'
+    implementation "com.bytedance.android.byteX:PluginConfigProcessor:0.1.0"
+    annotationProcessor "com.bytedance.android.byteX:PluginConfigProcessor:0.1.0"
+
+
+    if (DEV_MODE == "true"){
+        implementation "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_API:0.0.1-local"
+    }
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

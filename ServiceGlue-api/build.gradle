@@ -1,0 +1,19 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+uploadArchives {
+    repositories.mavenDeployer {
+        if (DEV_MODE == "true") {
+            repository(url: "file://" + rootProject.buildDir.parent + '/localMaven')
+            pom.version = "0.0.1-local"
+            pom.groupId = PROJ_GROUP
+            pom.artifactId = PROJ_ARTIFACTID_SERVICE_API
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

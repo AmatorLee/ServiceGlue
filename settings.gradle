@@ -1,0 +1,2 @@
+include ':app', ':ServiceGlue-api', ':ServiceGlue-plugin', ':library1', ':library2'
+rootProject.name='ServiceGlue'
