@@ -4,13 +4,21 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven{
+        maven {
             url "file://" + rootProject.buildDir.parent + '/localMaven'
+        }
+        maven {
+            url 'https://dl.bintray.com/liguangquan/maven'
         }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
-        classpath 'me.amator.sdk:serviceGlue-plugin:0.0.1-local'
+        if (DEV_MODE == 'true') {
+            classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:0.0.1-local"
+        } else {
+            classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:$PROJ_SERVICE_PLUGIN_VERSION"
+        }
+        classpath 'com.novoda:bintray-release:0.9.2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -22,6 +30,9 @@ allprojects {
         jcenter()
         maven{
             url "file://" + rootProject.buildDir.parent + '/localMaven'
+        }
+        maven {
+            url 'https://dl.bintray.com/liguangquan/maven'
         }
     }
 }

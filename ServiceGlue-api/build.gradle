@@ -1,12 +1,24 @@
 apply plugin: 'java-library'
-apply plugin: 'maven'
-uploadArchives {
-    repositories.mavenDeployer {
-        if (DEV_MODE == "true") {
-            repository(url: "file://" + rootProject.buildDir.parent + '/localMaven')
-            pom.version = "0.0.1-local"
-            pom.groupId = PROJ_GROUP
-            pom.artifactId = PROJ_ARTIFACTID_SERVICE_API
+if (DEV_MODE == "false") {
+    apply plugin: 'com.novoda.bintray-release'
+    publish {
+        userOrg = 'liguangquan'
+        groupId = PROJ_GROUP
+        artifactId = PROJ_ARTIFACTID_SERVICE_API
+        publishVersion = PROJ_SERVICE_API_VERSIOB
+        desc = ''
+        website = ''
+    }
+} else {
+    apply plugin: 'maven'
+    uploadArchives {
+        repositories.mavenDeployer {
+            if (DEV_MODE == "true") {
+                repository(url: "file://" + rootProject.buildDir.parent + '/localMaven')
+                pom.version = "0.0.1-local"
+                pom.groupId = PROJ_GROUP
+                pom.artifactId = PROJ_ARTIFACTID_SERVICE_API
+            }
         }
     }
 }

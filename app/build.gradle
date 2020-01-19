@@ -31,8 +31,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    if (DEV_MODE == "true"){
+    if (DEV_MODE == "true") {
         implementation "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_API:0.0.1-local"
+    } else {
+        implementation "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_API:$PROJ_SERVICE_API_VERSIOB"
     }
     implementation project(':library1')
     implementation project(':library2')
