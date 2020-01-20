@@ -1,6 +1,7 @@
 package com.me.amator.service.traverse;
 
 import com.me.amator.service.api.InstanceProvider;
+import com.me.amator.service.api.PluginServiceImpl;
 import com.me.amator.service.api.ServiceImpl;
 import com.me.amator.service.api.ServiceInterface;
 import com.ss.android.ugc.bytex.common.utils.TypeUtil;
@@ -35,13 +36,20 @@ public class GlueTraverseClassVisitor extends BaseClassVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
-        if (descriptor.equals(Type.getDescriptor(ServiceImpl.class))){
+        if (descriptor.equals(Type.getDescriptor(ServiceImpl.class))) {
             findServiceImpl = true;
             serviceModel = new ServiceModel();
+            serviceModel.setPlugin(false);
             serviceModel.setClassName(className);
             serviceModel.setInterfaces(interfaces);
-        }else if (descriptor.equals(Type.getDescriptor(ServiceInterface.class))){
+        } else if (descriptor.equals(Type.getDescriptor(ServiceInterface.class))) {
             findServiceInterface = true;
+        } else if (descriptor.equals(Type.getDescriptor(PluginServiceImpl.class))) {
+            findServiceImpl = true;
+            serviceModel = new ServiceModel();
+            serviceModel.setPlugin(true);
+            serviceModel.setClassName(className);
+            serviceModel.setInterfaces(interfaces);
         }
         return super.visitAnnotation(descriptor, visible);
     }
@@ -51,8 +59,8 @@ public class GlueTraverseClassVisitor extends BaseClassVisitor {
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 
-        if (findServiceImpl){
-            return new MethodVisitor(Opcodes.ASM5,mv) {
+        if (findServiceImpl) {
+            return new MethodVisitor(Opcodes.ASM5, mv) {
 
                 @Override
                 public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
@@ -75,14 +83,14 @@ public class GlueTraverseClassVisitor extends BaseClassVisitor {
     @Override
     public void visitEnd() {
         super.visitEnd();
-        if (findServiceImpl && findServiceInterface){
+        if (findServiceImpl && findServiceInterface) {
             throw new IllegalArgumentException("@ServiceInterface and @ServiceImpl add on a same class?");
         }
-        if (findServiceInterface){
+        if (findServiceInterface) {
             GlueHolder.getInstance().addInterface(className);
         }
 
-        if (findServiceImpl){
+        if (findServiceImpl) {
             GlueHolder.getInstance().addServiceModel(serviceModel);
         }
     }

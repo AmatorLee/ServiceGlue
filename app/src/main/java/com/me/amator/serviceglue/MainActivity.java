@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.me.amator.library1.ITestInterface;
 import com.me.amator.library1.ITestInterface1;
+import com.me.amator.library1.ITestInterface2;
 import com.me.amator.service.ServiceGlue;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +27,11 @@ public class MainActivity extends AppCompatActivity {
     public void clickInterface1(View v){
         ServiceGlue.getService(ITestInterface1.class)
                 .log();
+    }
+
+
+    public void ClickInterface2(View v){
+        ServiceGlue.getService(ITestInterface2.class).log();
     }
 
 }

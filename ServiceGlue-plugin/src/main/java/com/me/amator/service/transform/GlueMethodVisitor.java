@@ -30,7 +30,7 @@ public class GlueMethodVisitor extends MethodVisitor {
     @Override
     public void visitCode() {
         super.visitCode();
-        List<ServiceModel> serviceModels = GlueHolder.getInstance().getsServiceModels();
+        List<ServiceModel> serviceModels = GlueHolder.getInstance().getServiceNotInjectPlugin();
         beforeInject();
         for (int i = 0; i < serviceModels.size(); i++) {
             ServiceModel model = serviceModels.get(i);

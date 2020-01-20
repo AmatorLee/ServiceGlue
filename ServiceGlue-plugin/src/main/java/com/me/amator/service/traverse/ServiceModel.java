@@ -13,7 +13,15 @@ public class ServiceModel {
     private MethodNode mMethodNode;
     private String[] mInterfaces;
     private String mCurInterface;
+    private boolean isPlugin;
 
+    public boolean isPlugin() {
+        return isPlugin;
+    }
+
+    public void setPlugin(boolean plugin) {
+        isPlugin = plugin;
+    }
 
     public void setInterfaces(String[] interfaces) {
         mInterfaces = interfaces;

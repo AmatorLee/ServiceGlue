@@ -15,6 +15,7 @@ public class GlueHolder {
     //接口缓存表
     private static List<String> sInterfaces = new ArrayList<>();
     private static List<ServiceModel> sServiceModels = new ArrayList<>();
+    private boolean hasRunTransform;
 
     private GlueHolder(){
 
@@ -51,10 +52,29 @@ public class GlueHolder {
 
     private void checkInner() {
         for (ServiceModel sServiceModel : sServiceModels) {
-            if (Utils.isEmpty(sServiceModel.getClassName()) || Utils.isEmpty(sServiceModel.getCurrentInterface())){
+            if (Utils.isEmpty(sServiceModel.getClassName()) || Utils.isEmpty(sServiceModel.getCurrentInterface())) {
                 throw new IllegalArgumentException("@serviceImpl has not current interface");
             }
         }
+    }
+
+    public void setRunTransform(boolean flag) {
+        this.hasRunTransform = flag;
+    }
+
+    public boolean hasRunTransform(){
+        return this.hasRunTransform;
+    }
+
+    public List<ServiceModel> getPluginServiceModel() {
+        List<ServiceModel> serviceModels = new ArrayList<>();
+        for (int i = 0; i < sServiceModels.size(); i++) {
+            ServiceModel serviceModel = sServiceModels.get(i);
+            if (serviceModel.isPlugin()) {
+                serviceModels.add(serviceModel);
+            }
+        }
+        return serviceModels;
     }
 
     private static class ServiceRegisterHolder{
@@ -72,9 +92,15 @@ public class GlueHolder {
         sServiceModels.add(serviceModel);
     }
 
-
-    public List<ServiceModel> getsServiceModels(){
-        return sServiceModels;
+    public List<ServiceModel> getServiceNotInjectPlugin() {
+        List<ServiceModel> notPlugin = new ArrayList<>();
+        for (int i = 0; i < sServiceModels.size(); i++) {
+            ServiceModel serviceModel = sServiceModels.get(i);
+            if (!serviceModel.isPlugin()) {
+                notPlugin.add(serviceModel);
+            }
+        }
+        return notPlugin;
     }
 
 

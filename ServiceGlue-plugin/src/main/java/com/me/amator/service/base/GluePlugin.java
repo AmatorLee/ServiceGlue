@@ -2,13 +2,17 @@ package com.me.amator.service.base;
 
 import com.android.build.gradle.AppExtension;
 import com.me.amator.service.transform.GlueInjectClassVisitor;
+import com.me.amator.service.transform.ServiceGluer;
 import com.me.amator.service.traverse.GlueHolder;
 import com.me.amator.service.traverse.GlueTraverseClassVisitor;
 import com.ss.android.ugc.bytex.common.CommonPlugin;
 import com.ss.android.ugc.bytex.common.TransformConfiguration;
+import com.ss.android.ugc.bytex.common.flow.TransformFlow;
+import com.ss.android.ugc.bytex.common.flow.main.MainTransformFlow;
 import com.ss.android.ugc.bytex.common.log.LevelLog;
 import com.ss.android.ugc.bytex.common.visitor.ClassVisitorChain;
 import com.ss.android.ugc.bytex.pluginconfig.anno.PluginConfig;
+import com.ss.android.ugc.bytex.transformer.TransformContext;
 import com.ss.android.ugc.bytex.transformer.TransformEngine;
 
 import org.gradle.api.Project;
@@ -22,6 +26,9 @@ import javax.annotation.Nonnull;
  **/
 @PluginConfig("service-glue")
 public class GluePlugin extends CommonPlugin<GlueExtension, GlueContext> {
+
+    private boolean hasRunTransform = false;
+
     @Override
     protected GlueContext getContext(Project project, AppExtension appExtension, GlueExtension serviceExtension) {
         LevelLog.DEFAULT.setTag(serviceExtension.getName());
@@ -29,9 +36,27 @@ public class GluePlugin extends CommonPlugin<GlueExtension, GlueContext> {
     }
 
     @Override
+    protected TransformFlow provideTransformFlow(@Nonnull MainTransformFlow mainFlow, @Nonnull TransformContext transformContext) {
+        TransformTwiceTransformFlow flow = new TransformTwiceTransformFlow(new TransformEngine(transformContext), context);
+        flow.appendHandler(this);
+        return flow;
+    }
+
+    @Override
     public void beforeTransform(@Nonnull TransformEngine engine) {
         super.beforeTransform(engine);
-        GlueHolder.getInstance().check();
+        if (!GlueHolder.getInstance().hasRunTransform()) {
+            GlueHolder.getInstance().check();
+        }
+    }
+
+    @Override
+    public void afterTransform(@Nonnull TransformEngine engine) {
+        super.afterTransform(engine);
+        if (!GlueHolder.getInstance().hasRunTransform()) {
+            GlueHolder.getInstance().setRunTransform(true);
+            ServiceGluer.injectPluginService(engine);
+        }
     }
 
     @Override
@@ -49,6 +74,7 @@ public class GluePlugin extends CommonPlugin<GlueExtension, GlueContext> {
     @Override
     public void init() {
         super.init();
+        GlueHolder.getInstance().setRunTransform(false);
         GlueHolder.getInstance().clear();
     }
 

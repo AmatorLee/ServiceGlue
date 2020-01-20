@@ -11,7 +11,17 @@ import org.gradle.api.Project;
  * desc: 胶水上下文
  **/
 public class GlueContext extends BaseContext<GlueExtension> {
+    private int time;
+
     public GlueContext(Project project, AppExtension android, GlueExtension extension) {
         super(project, android, extension);
+    }
+
+    public void setTraverseTime(int time) {
+        this.time = time;
+    }
+
+    public int getTraverseTime() {
+        return this.time;
     }
 }

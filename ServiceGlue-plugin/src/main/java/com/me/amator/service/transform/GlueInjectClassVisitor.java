@@ -1,6 +1,8 @@
 package com.me.amator.service.transform;
 
 import com.me.amator.service.ServiceFinder;
+import com.me.amator.service.traverse.GlueHolder;
+import com.ss.android.ugc.bytex.common.log.LevelLog;
 import com.ss.android.ugc.bytex.common.utils.TypeUtil;
 import com.ss.android.ugc.bytex.common.visitor.BaseClassVisitor;
 
@@ -33,7 +35,9 @@ public class GlueInjectClassVisitor extends BaseClassVisitor {
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-        if (mIsFinder && name.equals("findService") && TypeUtil.isStatic(access)) {
+        if (mIsFinder && name.equals("findService") &&
+                TypeUtil.isStatic(access) &&
+                !GlueHolder.getInstance().hasRunTransform()) {
             return new GlueMethodVisitor(mv);
         }
         return mv;

@@ -19,4 +19,14 @@
         android:onClick="clickInterface1"
         android:textAllCaps="false"
         android:text="ClickInterface1"/>
+
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="ClickInterface2"
+        android:textAllCaps="false"
+        android:text="ClickInterface2"/>
+
 </LinearLayout>
