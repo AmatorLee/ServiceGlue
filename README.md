@@ -90,17 +90,30 @@ dependencise{
   implementation 'me.amator.sdk:serviceGlue-plugin:${last_version}'
 }
 
-
 ```
 
+3. 如果项目中有使用插件开发，在完成第二步配置后，插件中的实现类用法调整
+```
+@PluginServiceImpl //插件实现类添加此注解
+public class TestImpl2 implements ITestInterface2 {
+
+    @Override
+    public void log() {
+        Log.e(TestImpl2.class.getSimpleName(),"try Log");
+    }
+}
+```
+### 注意：PluginServiceImpl会额外生成.class文件用于插件构建实例，宿主中慎用，防止影响包体积
+
 # 版本更新
-### last_version=0.0.1  tag: 服务发现框架
+#### last_version=0.0.1  changeLog: 服务发现框架
+#### last_version=0.0.2  changeLog：支持插件开发 
       
   
   # TODO
-  1. 增量编译
-  2. 支持带参数构造函数
-  3. 兼容插件开发
+  1. ~兼容插件开发~
+  2. 增量编译
+  3. 支持带参数构造函数
   4. 懒加载
   
   # 感谢
