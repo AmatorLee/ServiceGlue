@@ -23,7 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Created by xuzhi on 2019-06-17.
+ * Created by liguangquan on 2020-01-20
+ * thanks {@link "https://github.com/Zane96"}
  */
 public class TransformTwiceTransformFlow extends AbsTransformFlow {
     private final List<MainProcessHandler> handlers = new ArrayList<>();
