@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$/ServiceGlue-api" />
             <option value="$PROJECT_DIR$/ServiceGlue-plugin" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/glueplugin-api" />
+            <option value="$PROJECT_DIR$/gluepluginsample" />
             <option value="$PROJECT_DIR$/library1" />
             <option value="$PROJECT_DIR$/library2" />
           </set>

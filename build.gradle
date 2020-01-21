@@ -12,13 +12,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
         if (DEV_MODE == 'true') {
             classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:0.0.1-local"
         } else {
             classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:$PROJ_SERVICE_PLUGIN_VERSION"
         }
         classpath 'com.novoda:bintray-release:0.9.2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.didi.virtualapk:gradle:0.9.8.6'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

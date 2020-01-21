@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.didi.virtualapk.plugin'
 apply plugin: 'service-glue'
-apply plugin: 'com.didi.virtualapk.host'
 
 ServiceGlue {
     enable true
@@ -9,23 +9,20 @@ ServiceGlue {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+
+
     defaultConfig {
-        applicationId "com.me.amator.serviceglue"
+        applicationId "com.me.amator.gluepluginsample"
         minSdkVersion 18
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs{
+
+    signingConfigs {
         release {
             storeFile file("../serviceglue.key")
             storePassword '123456'
@@ -39,23 +36,40 @@ android {
             keyPassword '123456'
         }
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+virtualApk {
+    packageId = 0x6f // 资源前缀.
+    targetHost = '../app' // 宿主模块的文件路径,生成插件会检查依赖项，分析和排除与宿主APP的共同依赖.
+    applyHostMapping = true //optional, default value: true.
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.+'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
     if (DEV_MODE == "true") {
         implementation "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_API:0.0.1-local"
     } else {
         implementation "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_API:$PROJ_SERVICE_API_VERSIOB"
     }
-    implementation project(':library1')
-    implementation project(':library2')
-    implementation 'com.didi.virtualapk:core:0.9.8'
     implementation project(":glueplugin-api")
 }

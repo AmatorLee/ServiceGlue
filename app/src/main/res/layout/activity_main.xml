@@ -6,27 +6,26 @@
 
 
     <Button
+        android:id="@+id/click_interface"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:onClick="clickInterface"
         android:textAllCaps="false"
         android:text="ClickInterface"/>
 
 
     <Button
+        android:id="@+id/click_interface1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:onClick="clickInterface1"
         android:textAllCaps="false"
         android:text="ClickInterface1"/>
 
 
-
     <Button
+        android:id="@+id/click_plugin"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:onClick="ClickInterface2"
         android:textAllCaps="false"
-        android:text="ClickInterface2"/>
+        android:text="clickPlugin"/>
 
 </LinearLayout>
