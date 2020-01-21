@@ -51,6 +51,21 @@ public class TestImpl1 implements ITestInterface1 {
     }
 }
 ```
+
+如果项目中有使用插件开发,插件中的实现类用法调整
+```
+@PluginServiceImpl //插件实现类添加此注解
+public class TestImpl2 implements ITestInterface2 {
+
+    @Override
+    public void log() {
+        Log.e(TestImpl2.class.getSimpleName(),"try Log");
+    }
+}
+```
+
+### 注意：PluginServiceImpl会额外生成.class文件用于插件构建实例，宿主中慎用，防止影响包体积
+
 再使用地方进行调用即可
 ```
  ServiceGlue.getService(ITestInterface1.class)
@@ -60,6 +75,7 @@ public class TestImpl1 implements ITestInterface1 {
   # 优势
   1. 无需关心注入过程，使用简单
   2. 无APT，缩短编译耗时
+  3. 无缝兼容插件开发
   
   # 在项目中引入
   1. 在Project的build.gradle文件中添加
@@ -92,22 +108,11 @@ dependencise{
 
 ```
 
-3. 如果项目中有使用插件开发，在完成第二步配置后，插件中的实现类用法调整
-```
-@PluginServiceImpl //插件实现类添加此注解
-public class TestImpl2 implements ITestInterface2 {
-
-    @Override
-    public void log() {
-        Log.e(TestImpl2.class.getSimpleName(),"try Log");
-    }
-}
-```
-### 注意：PluginServiceImpl会额外生成.class文件用于插件构建实例，宿主中慎用，防止影响包体积
-
 # 版本更新
-#### last_version=0.0.1  changeLog: 服务发现框架
-#### last_version=0.0.2  changeLog：支持插件开发 
+```
+last_version=0.0.2  changeLog：支持插件开发 
+last_version=0.0.1  changeLog: 服务发现框架
+```
       
   
   # TODO
