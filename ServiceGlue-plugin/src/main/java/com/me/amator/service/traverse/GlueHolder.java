@@ -2,8 +2,14 @@ package com.me.amator.service.traverse;
 
 import com.me.amator.service.Utils;
 
+import org.objectweb.asm.tree.FieldNode;
+
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liguangquan on 2019-1-18
@@ -16,6 +22,7 @@ public class GlueHolder {
     private static List<String> sInterfaces = new ArrayList<>();
     private static List<ServiceModel> sServiceModels = new ArrayList<>();
     private boolean hasRunTransform;
+    private static Map<String,List<FieldNode>> sFields = new HashMap<>();
 
     private GlueHolder(){
 
@@ -75,6 +82,21 @@ public class GlueHolder {
             }
         }
         return serviceModels;
+    }
+
+    public void addField(String className, FieldNode fieldNode) {
+        List<FieldNode> fieldNodes;
+        if (sFields.containsKey(className)) {
+            fieldNodes = sFields.get(className);
+        } else {
+            fieldNodes = new LinkedList<>();
+        }
+        fieldNodes.add(fieldNode);
+        sFields.put(className, fieldNodes);
+    }
+
+    public List<FieldNode> containFieldKey(String className) {
+        return sFields.get(className);
     }
 
     private static class ServiceRegisterHolder{

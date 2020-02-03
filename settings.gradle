@@ -1,3 +1,9 @@
-include ':app', ':gluepluginsample', ':ServiceGlue-api', ':library1', ':library2', ':ServiceGlue-plugin', ':glueplugin-api'
+if (UPLOAD_API == "true") {
+    include ':ServiceGlue-api'
+} else if (UPLOAD_PLUGIN == "true") {
+    include ':ServiceGlue-plugin'
+} else {
+    include ':app', ':gluepluginsample', ':ServiceGlue-api', ':library1', ':library2', ':ServiceGlue-plugin', ':glueplugin-api'
+}
 
 rootProject.name='ServiceGlue'

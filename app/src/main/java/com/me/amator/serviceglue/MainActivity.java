@@ -3,6 +3,7 @@ package com.me.amator.serviceglue;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.didi.virtualapk.PluginManager;
@@ -11,12 +12,20 @@ import com.me.amator.library1.ITestInterface;
 import com.me.amator.library1.ITestInterface1;
 import com.me.amator.library1.ITestInterface2;
 import com.me.amator.service.ServiceGlue;
+import com.me.amator.service.api.ServiceInject;
 
 public class MainActivity extends AppCompatActivity {
+
+    @ServiceInject
+    private ITestInterface iTestInterface ;
+
+    @ServiceInject
+    private ITestInterface1 iTestInterface1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        iTestInterface.log();
         setContentView(R.layout.activity_main);
         findViewById(R.id.click_plugin)
                 .setOnClickListener(new View.OnClickListener() {

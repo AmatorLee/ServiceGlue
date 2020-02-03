@@ -12,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        if (DEV_MODE == 'true') {
+        if (DEV_MODE == 'true' || UPLOAD_API == "true" || UPLOAD_PLUGIN == "true") {
             classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:0.0.1-local"
         } else {
             classpath "$PROJ_GROUP:$PROJ_ARTIFACTID_SERVICE_PLUGIN:$PROJ_SERVICE_PLUGIN_VERSION"

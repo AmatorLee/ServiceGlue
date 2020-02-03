@@ -3,14 +3,17 @@ package com.me.amator.service.traverse;
 import com.me.amator.service.api.InstanceProvider;
 import com.me.amator.service.api.PluginServiceImpl;
 import com.me.amator.service.api.ServiceImpl;
+import com.me.amator.service.api.ServiceInject;
 import com.me.amator.service.api.ServiceInterface;
 import com.ss.android.ugc.bytex.common.utils.TypeUtil;
 import com.ss.android.ugc.bytex.common.visitor.BaseClassVisitor;
 
 import org.objectweb.asm.AnnotationVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
@@ -25,6 +28,7 @@ public class GlueTraverseClassVisitor extends BaseClassVisitor {
     private boolean findServiceImpl;
     private boolean findServiceInterface;
     private ServiceModel serviceModel;
+    private boolean findServiceInject;
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
@@ -54,6 +58,20 @@ public class GlueTraverseClassVisitor extends BaseClassVisitor {
         return super.visitAnnotation(descriptor, visible);
     }
 
+    @Override
+    public FieldVisitor visitField(final int access, final String name, final String originDescriptor, final String signature, final Object value) {
+        FieldVisitor fv = super.visitField(access, name, originDescriptor, signature, value);
+        return new FieldVisitor(Opcodes.ASM5, fv) {
+            @Override
+            public AnnotationVisitor visitAnnotation(String descriptor, boolean visible) {
+                if (descriptor.equals(Type.getDescriptor(ServiceInject.class))) {
+                    FieldNode fieldNode = new FieldNode(access, name, originDescriptor, signature, value);
+                    GlueHolder.getInstance().addField(className, fieldNode);
+                }
+                return super.visitAnnotation(descriptor, visible);
+            }
+        };
+    }
 
     @Override
     public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {

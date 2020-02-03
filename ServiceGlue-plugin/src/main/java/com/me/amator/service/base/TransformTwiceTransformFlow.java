@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 /**
  * Created by liguangquan on 2020-01-20
- * thanks {@link "https://github.com/Zane96"}
  */
 public class TransformTwiceTransformFlow extends AbsTransformFlow {
     private final List<MainProcessHandler> handlers = new ArrayList<>();

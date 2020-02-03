@@ -6,7 +6,7 @@
 1. 静态注入
   新建一个base模块，依赖所有接口层及实现层，然后静态注入
 2. 动态注入
-  利用app构建过程中，class-》dex前的transform进行字节码注入
+  利用app构建过程中，.class->dex前的transform进行字节码注入
   
 ServiceGlue采用第二种方式，动态注入，构造实现类实例 
 
@@ -52,7 +52,7 @@ public class TestImpl1 implements ITestInterface1 {
 }
 ```
 
-如果项目中有使用插件开发,插件中的实现类用法调整
+如果项目中有使用插件开发,插件中的实现类通过`@PluginServiceImpl`注解
 ```
 @PluginServiceImpl //插件实现类添加此注解
 public class TestImpl2 implements ITestInterface2 {
@@ -66,18 +66,36 @@ public class TestImpl2 implements ITestInterface2 {
 
 ### 注意：PluginServiceImpl会额外生成.class文件用于插件构建实例，宿主中慎用，防止影响包体积
 
-再使用地方进行调用即可
+在使用地方进行调用即可
 ```
  ServiceGlue.getService(ITestInterface1.class)
                 .log();
   ```
+
+如果某个类中大量使用某个服务，可以通过`@ServiceInject`标注为成员属性
+```
+    @ServiceInject
+    private ITestInterface iTestInterface ;
+
+    @ServiceInject
+    private ITestInterface1 iTestInterface1 ;
+```
+编译过程中已自动完成赋值，直接使用即可
+```
+    iTestInterface.log();
+ ```
+ 
+ 
+### 注意：因宿主构建无法对插件的实现类进行注入，在宿主中调用插件的服务必须进行判空，防止空指针
   
-  # 优势
+  
+# 优势
   1. 无需关心注入过程，使用简单
   2. 无APT，缩短编译耗时
   3. 无缝兼容插件开发
+  4. 成员属性自动注入，使用便捷
   
-  # 在项目中引入
+# 在项目中引入
   1. 在Project的build.gradle文件中添加
   ```
   //maven依赖
@@ -93,7 +111,7 @@ dependencies {
       classpath 'me.amator.sdk:serviceGlue-plugin:${last_version}'
     }
 ```
-2. 在Application的build.gradle、library的buildgradle添加
+2. 在Application、插件、library的buildgradle添加
 ```
 apply plugin: 'service-glue'
 
@@ -110,16 +128,16 @@ dependencise{
 
 # 版本更新
 ```
+last_version=0.0.3  changeLog：支持成员属性注入
 last_version=0.0.2  changeLog：支持插件开发 
 last_version=0.0.1  changeLog: 服务发现框架
 ```
       
   
-  # TODO
+# TODO
   1. ~兼容插件开发~
-  2. 增量编译
-  3. 支持带参数构造函数
-  4. 懒加载
+  2. ~成员属性注入~
+  3. 增量编译
   
-  # 感谢
+# 感谢
   [byteX](https://github.com/bytedance/ByteX)
