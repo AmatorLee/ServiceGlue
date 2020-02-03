@@ -72,15 +72,17 @@ public class TestImpl2 implements ITestInterface2 {
                 .log();
   ```
 
-如果某个类中大量使用某个服务，可以通过`@ServiceInject`标注为成员属性
+#### 推荐将接口类声明为属性同时使用`@ServiceInject`进行实例注入，避免大量手动调用`ServiceGlue.getSerivce(XXX.class);`的情况
 ```
+class Test {
     @ServiceInject
     private ITestInterface iTestInterface ;
 
     @ServiceInject
     private ITestInterface1 iTestInterface1 ;
+}
 ```
-编译过程中已自动完成赋值，直接使用即可
+编译过程中已动态注入，直接使用即可
 ```
     iTestInterface.log();
  ```
@@ -111,7 +113,7 @@ dependencies {
       classpath 'me.amator.sdk:serviceGlue-plugin:${last_version}'
     }
 ```
-2. 在Application、插件、library的buildgradle添加
+2. 在Application、插件、library的build.gradle添加
 ```
 apply plugin: 'service-glue'
 
@@ -128,6 +130,7 @@ dependencise{
 
 # 版本更新
 ```
+last_version=0.0.4  changeLog：fix bug
 last_version=0.0.3  changeLog：支持成员属性注入
 last_version=0.0.2  changeLog：支持插件开发 
 last_version=0.0.1  changeLog: 服务发现框架

@@ -1,8 +1,7 @@
 package com.me.amator.service.transform;
 
 import com.me.amator.service.Constants;
-
-import org.objectweb.asm.FieldVisitor;
+import com.ss.android.ugc.bytex.common.log.LevelLog;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -21,7 +20,7 @@ public class GlueInjectFieldMethodVisitor extends MethodVisitor {
     private List<FieldNode> fieldNodes;
     private String className;
 
-    public GlueInjectFieldMethodVisitor(MethodVisitor nethodVisitor, String className,List<FieldNode> fieldNodes) {
+    public GlueInjectFieldMethodVisitor(MethodVisitor nethodVisitor, String className, List<FieldNode> fieldNodes) {
         super(Opcodes.ASM5, nethodVisitor);
         this.fieldNodes = fieldNodes;
         this.className = className;
@@ -30,6 +29,7 @@ public class GlueInjectFieldMethodVisitor extends MethodVisitor {
     @Override
     public void visitCode() {
         super.visitCode();
+        Type type;
         for (int i = 0; i < fieldNodes.size(); i++) {
             FieldNode fieldNode = fieldNodes.get(i);
             Label label1 = new Label();
@@ -41,8 +41,10 @@ public class GlueInjectFieldMethodVisitor extends MethodVisitor {
             mv.visitMethodInsn(Opcodes.INVOKESTATIC, Constants.SERVICEGLUE_CLASS,
                     Constants.SERVICEGLUE_METHOD,
                     "(Ljava/lang/Class;)Ljava/lang/Object;", false);
-            mv.visitTypeInsn(Opcodes.CHECKCAST, Type.getType(fieldNode.desc).getInternalName());
+            type = Type.getType(fieldNode.desc);
+            mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
             mv.visitFieldInsn(Opcodes.PUTFIELD, className, fieldNode.name, fieldNode.desc);
+            LevelLog.DEFAULT.e(String.format("service inject instance %s %s = ServiceGlue.getService(%s.class) for %s", type.getClassName(), fieldNode.name, type.getClassName(), className));
         }
     }
 }

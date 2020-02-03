@@ -1,6 +1,7 @@
 package com.me.amator.service.transform;
 
 import com.android.build.api.transform.Status;
+import com.me.amator.service.Constants;
 import com.me.amator.service.Utils;
 import com.me.amator.service.traverse.GlueHolder;
 import com.me.amator.service.traverse.ServiceModel;
@@ -32,10 +33,10 @@ public class ServiceGluer {
         ClassWriter classWriter = new ClassWriter(0);
         MethodVisitor methodVisitor;
 
-        classWriter.visit(Opcodes.V1_7, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, serviceModel.getCurrentInterface() + "$$ServiceGluer",
+        classWriter.visit(Opcodes.V1_7, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, serviceModel.getCurrentInterface() + Constants.SERVICEGLUE_GLUER,
                 null, "java/lang/Object", null);
 
-        classWriter.visitSource(Utils.path2Current(false, Utils.path2Current(false, serviceModel.getCurrentInterface()) + "$$ServiceGluer"), null);
+        classWriter.visitSource(Utils.path2Current(false, Utils.path2Current(false, serviceModel.getCurrentInterface()) + Constants.SERVICEGLUE_GLUER), null);
 
         //init
         {
@@ -48,7 +49,7 @@ public class ServiceGluer {
             methodVisitor.visitInsn(Opcodes.RETURN);
             Label label1 = new Label();
             methodVisitor.visitLabel(label1);
-            methodVisitor.visitLocalVariable("this", String.format("L%s$$ServiceGluer;", serviceModel.getCurrentInterface()), null, label0, label1, 0);
+            methodVisitor.visitLocalVariable("this", String.format("L%s%s;", Constants.SERVICEGLUE_GLUER, serviceModel.getCurrentInterface()), null, label0, label1, 0);
             methodVisitor.visitMaxs(1, 1);
             methodVisitor.visitEnd();
         }
@@ -72,7 +73,7 @@ public class ServiceGluer {
             methodVisitor.visitInsn(Opcodes.ARETURN);
             Label label1 = new Label();
             methodVisitor.visitLabel(label1);
-            methodVisitor.visitLocalVariable("this", String.format("L%s$$ServiceGluer;", serviceModel.getCurrentInterface()), null, label0, label1, 0);
+            methodVisitor.visitLocalVariable("this", String.format("L%s%s;", Constants.SERVICEGLUE_GLUER, serviceModel.getCurrentInterface()), null, label0, label1, 0);
             methodVisitor.visitMaxs(2, 1);
             methodVisitor.visitEnd();
         }
@@ -103,7 +104,7 @@ public class ServiceGluer {
         String currentInterface = serviceModel.getCurrentInterface();
         String current = Utils.path2Current(true, currentInterface);
         String simpleName = Utils.path2Current(false, currentInterface);
-        String relativePath = current + File.separator + simpleName + "$$ServiceGluer.class";
+        String relativePath = current + File.separator + simpleName + Constants.SERVICEGLUE_GLUER + ".class";
         engine.addFile("serviceGluer", new FileData(bytes, relativePath, Status.ADDED));
     }
 

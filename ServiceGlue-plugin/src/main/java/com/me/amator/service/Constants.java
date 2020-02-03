@@ -9,5 +9,6 @@ public interface Constants {
 
     public static final String SERVICEGLUE_CLASS = "com/me/amator/service/ServiceGlue";
     public static final String SERVICEGLUE_METHOD = "getService";
+    public static final String SERVICEGLUE_GLUER = "$$ServiceGluer";
 
 }

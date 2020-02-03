@@ -129,6 +129,7 @@ public class GlueHolder {
     public void clear(){
         sServiceModels.clear();;
         sInterfaces.clear();
+        sFields.clear();
     }
 
 
